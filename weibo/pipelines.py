@@ -20,10 +20,17 @@ settings = get_project_settings()
 
 class CsvPipeline(object):
     def process_item(self, item, spider):
-        base_dir = '结果文件' + os.sep + item['keyword']
+        start_date = spider.settings.get('START_DATE', 'start')
+        end_date = spider.settings.get('END_DATE', 'end')
+
+        # 构建文件夹路径
+        base_dir = f"结果文件{os.sep}{item['keyword']}_{start_date}_{end_date}"
         if not os.path.isdir(base_dir):
             os.makedirs(base_dir)
-        file_path = base_dir + os.sep + item['keyword'] + '.csv'
+
+        # 构建文件路径，包含关键词、开始日期和结束日期
+        file_path = f"{base_dir}{os.sep}{item['keyword']}_{start_date}_{end_date}.csv"
+
         if not os.path.isfile(file_path):
             is_first_write = 1
         else:

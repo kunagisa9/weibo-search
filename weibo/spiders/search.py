@@ -190,12 +190,9 @@ class SearchSpider(scrapy.Spider):
         keyword = response.meta.get('keyword')
         is_empty = response.xpath(
             '//div[@class="card card-no-result s-pt20b40"]')
-        start_time = response.meta.get('start_time')
-        end_time = response.meta.get('end_time')
-        page_count = len(response.xpath('//ul[@class="s-scroll"]/li'))
         if is_empty:
             print('当前页面搜索结果为空')
-        elif page_count < self.further_threshold:
+        else:
             # 解析当前页面
             for weibo in self.parse_weibo(response):
                 self.check_environment()
@@ -207,23 +204,6 @@ class SearchSpider(scrapy.Spider):
                 yield scrapy.Request(url=next_url,
                                      callback=self.parse_page,
                                      meta={'keyword': keyword})
-        else:
-            for region in self.regions.values():
-                url = ('https://s.weibo.com/weibo?q={}&region=custom:{}:1000'
-                       ).format(keyword, region['code'])
-                url += self.weibo_type
-                url += self.contain_type
-                url += '&timescope=custom:{}:{}&page=1'.format(
-                    start_time, end_time)
-                # 获取一小时一个省的搜索结果
-                yield scrapy.Request(url=url,
-                                     callback=self.parse_by_hour_province,
-                                     meta={
-                                         'keyword': keyword,
-                                         'start_time': start_time,
-                                         'end_time': end_time,
-                                         'province': region
-                                     })
 
     def parse_by_hour_province(self, response):
         """以小时和直辖市/省为单位筛选"""
