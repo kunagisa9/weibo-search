@@ -19,7 +19,7 @@ PipelineInterface = TextClassificationPipeline(
     device=device,
     return_all_scores=True
 )
-root_path = "./结果文件"
+root_path = "./结果文件1"
 
 def is_valid_text(text):
     """
@@ -46,17 +46,32 @@ def extract_score(result, label):
             return item['score']
     return None
 
-not_file = ['PTA 期货_2009-08-01_2023-12-31.csv', '20号胶 期货_2009-08-01_2023-12-31.csv']
-not_contain = ['豆一']
+not_file = ['PTA 期货_2009-08-01_2023-12-31.csv',
+            '20号胶 期货_2009-08-01_2023-12-31.csv',
+            '螺纹钢 期货_2013-01-01_2013-12-31.csv',
+            '螺纹钢 期货_2018-01-01_2018-12-31.csv',
+            '螺纹钢 期货_2014-01-01_2014-12-31.csv'
+            ]
+# not_contain = ['豆一','不锈钢','乙二醇','对二甲苯','原油', '尿素', '棉纱', '棉花', '棕榈油', '橡胶', '沥青',
+#                '油菜籽', '烧碱', '热轧卷板', '焦炭', '焦煤', '燃料油', '玉米', '玉米淀粉', '玻璃', '生猪',
+#                '甲醇', '白糖', '白银', '短纤', '硅铁', '粳米', '红枣', '纯碱', '纸浆', '线材', '聚丙烯',
+#                '聚乙烯', '聚氯乙烯', '花生', '苯乙烯', '苹果', '菜籽粕', '螺纹钢', '豆二', '氧化铝', '豆油',
+#                '豆粕', '铁矿石', '铅', '铜', '铝', '锌', '锡', '锰硅', '镍', '鸡蛋', '黄金']
+
+not_contain = []
 
 for subdir, _, files in os.walk(root_path):
     for file in files:
         if file.endswith(".csv"):
             if file not in not_file:
+                skip_file = False
                 for contain in not_contain:
                     if contain in file:
                         print(f"跳过文件: {file}")
-                        continue
+                        skip_file = True
+                        break
+                if skip_file:
+                    continue
                 csv_path = os.path.join(subdir, file)
                 print(f"正在处理文件: {csv_path}")
 
@@ -78,7 +93,7 @@ for subdir, _, files in os.walk(root_path):
                 if valid_texts:  # 如果有合法文本，则批量处理
                     # 批量处理：一次性传入多个文本，可设置 batch_size 提高 GPU 利用率
                     time1 = time.time()
-                    batch_results = PipelineInterface(valid_texts, batch_size=32)
+                    batch_results = PipelineInterface(valid_texts, batch_size=4)
                     time2 = time.time()
                     print(f"处理时间：{time2 - time1:.2f} 秒")
                     # 将批量得到的结果按照原来的索引填回 DataFrame

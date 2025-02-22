@@ -61,8 +61,10 @@ def extract_score(result, label):
 # 3. 读取 CSV，并预处理数据
 # ------------------------------
 # csv_path = "./结果文件/螺纹钢 期货_2018-01-01_2018-12-31/螺纹钢 期货_2018-01-01_2018-12-31.csv"
-csv_path = "./结果文件/豆一 期货_2014-01-01_2014-12-31/豆一 期货_2014-01-01_2014-12-31.csv"
+# csv_path = "./结果文件/豆一 期货_2014-01-01_2014-12-31/豆一 期货_2014-01-01_2014-12-31.csv"
 # csv_path = "./结果文件/PTA 期货_2009-08-01_2023-12-31/PTA 期货_2009-08-01_2023-12-31.csv"
+csv_path = "./结果文件/螺纹钢 期货_2013-01-01_2013-12-31/螺纹钢 期货_2013-01-01_2013-12-31.csv"
+
 
 print(f"正在处理文件: {csv_path}")
 df = pd.read_csv(csv_path)
@@ -87,13 +89,21 @@ valid_indices = df.index[valid_mask].tolist()
 valid_texts = df.loc[valid_mask, 'content'].tolist()
 
 if valid_texts:  # 如果有合法文本，则批量处理
-    # 批量处理：一次性传入多个文本，可设置 batch_size 提高 GPU 利用率
+    # 去重处理
+    unique_texts = list(set(valid_texts))  # 去重
     time1 = time.time()
-    batch_results = PipelineInterface(valid_texts, batch_size=32)
+    batch_results = PipelineInterface(unique_texts, batch_size=4)  # 批量处理去重后的文本
     time2 = time.time()
     print(f"处理时间：{time2 - time1:.2f} 秒")
-    # 将批量得到的结果按照原来的索引填回 DataFrame
-    df.loc[valid_indices, 'result'] = pd.Series(batch_results, index=valid_indices)
+
+    # 创建一个临时 DataFrame 来存储去重后的结果
+    unique_df = pd.DataFrame({'content': unique_texts, 'result': batch_results})
+
+    # 将去重后的结果合并回原始 DataFrame
+    df = df.merge(unique_df, on='content', how='left', suffixes=('', '_unique'))
+    df['result'] = df['result_unique'].combine_first(df['result'])  # 合并结果列
+    df.drop(columns=['result_unique'], inplace=True)  # 删除临时列
+
     time3 = time.time()
     print(f"填充时间：{time3 - time2:.2f} 秒")
 
