@@ -1,0 +1,8 @@
+finb_try_batch.py为单一文件处理，获取情绪可能性
+finb3.py为批量文件处理
+处理完成后运行合并关键词.py，会批量合并关键词相同、时间不同的文件
+然后再运行data_describe.ipynb中的部分代码，会产生score
+
+merge_duplicate_data用于重复值的文件，比如说既叫这个名字又叫那个名字的期货，肯定有重复的微博，我把它们按id这列进行去重操作
+
+有了score就能产signal了，1和2
