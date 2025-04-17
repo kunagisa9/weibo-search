@@ -13,6 +13,13 @@ class EmailSender:
         self.sender_password = "KZqMvSquNnci58yD"  # 10
         self.receiver = "akane.s@qq.com"
 
+        # ----------------
+        self.smtp_server = "smtp.163.com"
+        self.smtp_port = 465
+        self.sender_email = "ttxh10@163.com"
+        self.sender_password = "KZqMvSquNnci58yD"  # 10
+        self.receiver = "akane.s@qq.com"
+
 
     def send_email(self, subject, body):
         try:

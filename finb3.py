@@ -19,7 +19,7 @@ PipelineInterface = TextClassificationPipeline(
     device=device,
     return_all_scores=True
 )
-root_path = "./结果文件1"
+root_path = "./结果文件2"
 
 def is_valid_text(text):
     """
