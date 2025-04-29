@@ -27,7 +27,7 @@ def produce_signal(file_path):
     df = pd.read_csv(file_path, encoding='utf-8-sig')
 
     # **保留指定列**
-    columns = ['id', '转发数', '评论数', '点赞数', '发布时间', 'valid', 'Neutral', 'Positive', 'Negative', 'score']
+    columns = ['id', '转发数', '评论数', '点赞数', '发布时间', 'valid', 'Neutral', 'Positive', 'Negative', 'score', 'filter_result']
     new_df = df[columns].copy()
 
     # **处理时间列**

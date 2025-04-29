@@ -37,7 +37,7 @@ for key in duplicate_dict:
     # 保存去重后的结果
     output_file_name = f"{key} 期货_2009-08-01_2023-12-31.csv"
     output_file_path = os.path.join(save_path, output_file_name)
-    combined_df.to_csv(output_file_path, index=False)
+    combined_df.to_csv(output_file_path, index=False, encoding='utf_8_sig')
 
     print(f"已处理并保存: {output_file_name}")
 
