@@ -9,9 +9,8 @@ def parse_date(s):
         # print(pd.to_datetime(s, format="%Y/%m/%d %H:%M"))
         return pd.to_datetime(s, format="%Y/%m/%d %H:%M")
 
-def produce_signal(file_path):
+def produce_signal(file_path,save_directory):
     """ 处理 CSV 文件并保存到 signal_data/ 目录中，如果文件已存在则跳过 """
-    save_directory = 'signal_data/'
     if not os.path.exists(save_directory):
         os.makedirs(save_directory)
 
@@ -42,10 +41,16 @@ def produce_signal(file_path):
 
 
 if __name__ == "__main__":
-    directory = '结果文件/去重合并结果/'
+    signal_dict = {
+        '1': '',
+        '2': '_different_weight',
+        '3': '_raw_score',
+    }
+    choice_signal = signal_dict['3']
+    directory = f'结果文件{choice_signal}/去重合并结果/'
 
     # **遍历目录下所有 CSV 文件**
     for file in os.listdir(directory):
         if file.endswith('.csv'):
             file_path = os.path.join(directory, file)
-            produce_signal(file_path)
+            produce_signal(file_path,f'signal_data{choice_signal}/')
