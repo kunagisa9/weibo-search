@@ -8,7 +8,7 @@ if __name__ == "__main__":
         '2': '_different_weight',
         '3': '_raw_score',
     }
-    choice_signal = signal_dict['2']
+    choice_signal = signal_dict['1']
     directory = f'signal_data{choice_signal}/'
     all_results = pd.DataFrame()  # 创建一个空的DataFrame来存储所有结果
 
@@ -18,9 +18,9 @@ if __name__ == "__main__":
             file_path = os.path.join(directory, file)
             df = pd.read_csv(file_path)  # 读取CSV文件
             keyword = file.split('_')[0].split(' ')[0]  # 提取文件名中的keyword
-            df=df[df['valid']==True]
+            # df=df[df['valid']==True]
             # df=df[(df['filter_result']==1) | (df['filter_result']==3)]  # 只有期货名+2个都有的
-            df = df[df['filter_result']==3]  # 只要两个关键词都有的
+            # df = df[df['filter_result']==3]  # 只要两个关键词都有的
             # 按year和month分组，并计算score的平均值
             grouped_df = df.groupby(['year', 'month', 'day']).agg(
                 signal=('score', 'mean'),  # 计算score的平均值，列名为signal
