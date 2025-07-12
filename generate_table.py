@@ -32,8 +32,8 @@ def generate_statistics_table_with_multiindex(data_dict, futures_english_dict2, 
 
         # 筛选 return 数据
         matched_return_df = return_df[return_df['name'].isin(matched_codes)]
-        return_mean = matched_return_df['tret'].mean()
-        return_std = matched_return_df['tret'].std()
+        return_mean = round(matched_return_df['tret'].mean() * 100, 4)
+        return_std = round(matched_return_df['tret'].std(), 4)
 
         # 统计原始指标
         count = len(df)
@@ -41,8 +41,8 @@ def generate_statistics_table_with_multiindex(data_dict, futures_english_dict2, 
         total_comments = df['评论数'].sum()
         total_likes = df['点赞数'].sum()
         unique_users = df['user_id'].nunique()
-        score_mean = df['score'].mean()
-        score_std = df['score'].std()
+        score_mean = round(df['score'].mean(), 4)
+        score_std = round(df['score'].std(), 4)
 
         # 添加到结果
         results.append([
@@ -70,7 +70,7 @@ def generate_statistics_table_with_multiindex(data_dict, futures_english_dict2, 
         ('Users', 'unique'),
         ('Score', 'mean'),
         ('Score', 'std'),
-        ('Return', 'mean'),
+        ('Return', 'mean %'),
         ('Return', 'std')
     ])
 
